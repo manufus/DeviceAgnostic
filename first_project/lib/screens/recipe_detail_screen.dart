@@ -1,32 +1,91 @@
 import 'package:flutter/material.dart';
+import '../widgets/responsive_widget.dart';
+import '../widgets/custom_vertical_card.dart';
+import '../data/cards_data.dart';
+import 'package:get/get.dart';
 
 class RecipeDetailScreen extends StatelessWidget {
-  final String recipeId; // This will be passed to identify the selected recipe
-
-  RecipeDetailScreen({required this.recipeId});
-
   @override
   Widget build(BuildContext context) {
-    // For now, we'll just display the recipeId; later, this would be used to fetch details
+    var recipeId = int.parse(Get.parameters['recipeId']!);
+    // int recipeId = 1; 
+    final recipe = recipeList.firstWhere((recipe) => recipe['id'] == recipeId);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recipe Details'),
+        title: Text(recipe["name"]),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Display the recipe image
+            Image.asset(recipe["image"], fit: BoxFit.cover),
+
+            SizedBox(height: 16),
+
+            // Display the recipe description
             Text(
-              'Recipe ID: $recipeId',
+              recipe["description"],
+              style: TextStyle(fontSize: 16),
+            ),
+
+            SizedBox(height: 24),
+
+            // Display the list of ingredients
+            Text(
+              'Ingredients',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            // Add more widgets here to show recipe details like title, ingredients, instructions
-            Text('Recipe details will go here'),
+            SizedBox(height: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: recipe["ingredients"].map<Widget>((ingredient) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Text("${ingredient['amount']} ${ingredient['name']}"),
+                );
+              }).toList(),
+            ),
+
+            SizedBox(height: 24),
+
+            // Display the list of steps
+            Text(
+              'Steps',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: recipe["steps"].map<Widget>((step) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Step Image
+                    Image.asset(step["image"], fit: BoxFit.cover),
+
+                    SizedBox(height: 8),
+
+                    // Step Title
+                    Text(
+                      step["title"],
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 4),
+
+                    // Step Description
+                    Text(step["description"]),
+                    SizedBox(height: 16),
+                  ],
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),
     );
   }
 }
+

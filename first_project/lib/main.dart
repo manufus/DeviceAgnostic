@@ -3,6 +3,8 @@ import 'screens/home_screen.dart';
 import 'screens/discover_screen.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/manage_recipes_screen.dart';
+import 'screens/recipe_detail_screen.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,27 +13,36 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    var recipeId = Get.parameters["recipeId"];
+    return GetMaterialApp(
+      initialRoute: "/",
+      getPages: [
+        GetPage(name: "/", page: ()=>HomeScreen()),
+        GetPage(name: "/discover", page: ()=>DiscoverScreen()),
+        GetPage(name: "/favorites", page: ()=>FavoritesScreen()),
+        GetPage(name: "/manage", page: ()=>ManageRecipesScreen()),
+        GetPage(name: "/recipes/:recipeId", page: ()=>RecipeDetailScreen()),
+      ],
       title: 'Recipe Manager',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: Inicio(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
+class Inicio extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _InicioState createState() => _InicioState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _InicioState extends State<Inicio> {
   int _selectedIndex = 0;
 
-  // List of main screens
   static List<Widget> _pages = <Widget>[
-    Home(),
+    // RecipeDetailScreen(),
+    HomeScreen(),
     DiscoverScreen(),
     FavoritesScreen(),
     ManageRecipesScreen(),

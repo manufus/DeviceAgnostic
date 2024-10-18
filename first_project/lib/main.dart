@@ -5,8 +5,14 @@ import 'screens/favorites_screen.dart';
 import 'screens/manage_recipes_screen.dart';
 import 'screens/recipe_detail_screen.dart';
 import 'package:get/get.dart';
+import 'screens/add_recipe_screen.dart';
+import 'controllers/recipe_controller.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('recipesBox');
+  Get.lazyPut<RecipeController>(() => RecipeController());
   runApp(MyApp());
 }
 
@@ -22,6 +28,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: "/favorites", page: ()=>FavoritesScreen()),
         GetPage(name: "/manage", page: ()=>ManageRecipesScreen()),
         GetPage(name: "/recipes/:recipeId", page: ()=>RecipeDetailScreen()),
+        GetPage(name: "/add-recipe", page: (()=>AddRecipeScreen()))
       ],
       title: 'Recipe Manager',
       theme: ThemeData(
@@ -44,7 +51,7 @@ class _InicioState extends State<Inicio> {
     // RecipeDetailScreen(),
     HomeScreen(),
     DiscoverScreen(),
-    FavoritesScreen(),
+    // FavoritesScreen(),
     ManageRecipesScreen(),
   ];
 
@@ -59,19 +66,23 @@ class _InicioState extends State<Inicio> {
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            backgroundColor: Colors.black,
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.local_fire_department),
             label: 'Discover',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.favorite),
+          //   label: 'Favorites',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: 'My Recipes',
@@ -79,6 +90,14 @@ class _InicioState extends State<Inicio> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate to the AddRecipeScreen
+          Get.toNamed("/add-recipe");
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.blue, // You can set the color to match your theme
       ),
     );
   }

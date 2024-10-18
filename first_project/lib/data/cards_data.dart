@@ -22,7 +22,9 @@ final List<Map<String, dynamic>> recipeList = [
     "name": "Delicious Pancakes",
     "image": "assets/images/pancakes.jpg",
     "description": "Fluffy and light pancakes, perfect for breakfast.",
-    "cuisine": "American",  // Add the cuisine field
+    "cuisine": "American",
+    "isFavorite": false, // Add a favorite flag
+    "isUserCreated": false, // Flag to indicate if the recipe is user-created
     "ingredients": [
       {"name": "Flour", "amount": "2 cups"},
       {"name": "Milk", "amount": "1.5 cups"},
@@ -54,7 +56,9 @@ final List<Map<String, dynamic>> recipeList = [
     "name": "Spaghetti Bolognese",
     "image": "assets/images/spaghetti.jpg",
     "description": "A hearty Italian classic that's perfect for dinner.",
-    "cuisine": "Italian",  // Add the cuisine field
+    "cuisine": "Italian",
+    "isFavorite": true, // Example of a recipe marked as favorite
+    "isUserCreated": false, // Not user-created
     "ingredients": [
       {"name": "Spaghetti", "amount": "400g"},
       {"name": "Minced Beef", "amount": "500g"},
@@ -81,13 +85,27 @@ final List<Map<String, dynamic>> recipeList = [
       }
     ]
   },
-  // Add more recipes with different cuisines
+  // Additional recipes can be added here
 ];
 
 List<Map<String, dynamic>> filterRecipesByCuisine(String selectedCuisine) {
   return recipeList.where((recipe) => recipe['cuisine'] == selectedCuisine).toList();
 }
 
+List<Map<String, dynamic>> getFavoriteRecipes() {
+  return recipeList.where((recipe) => recipe['isFavorite'] == true).toList();
+}
+
+List<Map<String, dynamic>> getUserCreatedRecipes() {
+  return recipeList.where((recipe) => recipe['isUserCreated'] == true).toList();
+}
+
+void addRecipe(Map<String, dynamic> newRecipe) {
+  newRecipe['id'] = recipeList.length + 1; // Assign a new unique ID
+  newRecipe['isFavorite'] = false; // Default favorite status
+  newRecipe['isUserCreated'] = true; // Mark as user-created
+  recipeList.add(newRecipe); // Add the new recipe to the list
+}
 
 
 final List<Map<String, String>> cuisinesData = [

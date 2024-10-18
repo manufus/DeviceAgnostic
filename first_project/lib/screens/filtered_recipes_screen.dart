@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/predefined_recipes.dart';
 import '../data/cards_data.dart';
 import '../widgets/custom_vertical_card.dart';
 

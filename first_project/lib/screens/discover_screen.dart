@@ -3,6 +3,7 @@ import '../data/cards_data.dart';
 import '../widgets/custom_vertical_card.dart';
 import 'package:get/get.dart';
 import '../screens/filtered_recipes_screen.dart';
+import '../data/predefined_recipes.dart';
 
 class DiscoverScreen extends StatelessWidget {
   @override
@@ -54,7 +55,7 @@ class DiscoverScreen extends StatelessWidget {
             // Trending Recipes List
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: recipeList.map<Widget>((recipe) {
+              children: predefinedRecipes.map<Widget>((recipe) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: GestureDetector(

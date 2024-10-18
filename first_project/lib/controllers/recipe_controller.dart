@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import '../data/predefined_recipes.dart'; // Import predefined recipes
 
 class RecipeController extends GetxController {
-  var recipeList = <Map<String, dynamic>>[].obs; // Observable list of recipes as maps
+  var recipeList = <Map<String, dynamic>>[].obs; // Observable list of recipes
   late Box recipeBox;
 
   @override
@@ -10,25 +11,33 @@ class RecipeController extends GetxController {
     super.onInit();
     recipeBox = Hive.box('recipesBox'); // Open the Hive box
 
-    // Load existing recipes from Hive
+    // Load both predefined and user-created recipes
     loadRecipes();
   }
 
-  // Load all recipes from Hive and add them to the observable list
+  // Load recipes from Hive and combine with predefined recipes
   void loadRecipes() {
-    recipeList.value = recipeBox.values.cast<Map<String, dynamic>>().toList();
+    final userCreatedRecipes = recipeBox.values
+      .map((recipe) => Map<String, dynamic>.from(recipe as Map))
+      .toList();
+
+    // Combine the predefined and user-created recipes
+    recipeList.value = [...predefinedRecipes, ...userCreatedRecipes];
   }
 
   // Add a new recipe to the list and save it to Hive
   void addRecipe(Map<String, dynamic> recipe) {
-    recipeList.add(recipe); // Add to observable list
-    recipeBox.add(recipe); // Save the recipe to Hive
+    recipe['isUserCreated'] = true; // Mark as user-created
+    recipeBox.add(recipe); // Save to Hive
+    loadRecipes(); // Reload recipes to include the new one
   }
 
-  // Delete a recipe from the list and remove it from Hive
+  // Delete a recipe from the list and remove it from Hive (only user-created)
   void deleteRecipe(int index) {
-    recipeBox.deleteAt(index); // Remove from Hive
-    recipeList.removeAt(index); // Remove from the observable list
+    if (recipeList[index]['isUserCreated'] == true) {
+      recipeBox.deleteAt(index - predefinedRecipes.length); // Adjust index for user-created recipes
+      loadRecipes(); // Reload recipes after deletion
+    }
   }
 }
 

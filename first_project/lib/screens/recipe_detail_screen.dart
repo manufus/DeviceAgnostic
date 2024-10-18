@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/responsive_widget.dart';
 import '../widgets/custom_vertical_card.dart';
 import '../data/cards_data.dart';
+import '../data/predefined_recipes.dart';
 import 'package:get/get.dart';
 
 class RecipeDetailScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class RecipeDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var recipeId = int.parse(Get.parameters['recipeId']!);
     // int recipeId = 1; 
-    final recipe = recipeList.firstWhere((recipe) => recipe['id'] == recipeId);
+    final recipe = predefinedRecipes.firstWhere((recipe) => recipe['id'] == recipeId);
 
     return Scaffold(
       appBar: AppBar(
